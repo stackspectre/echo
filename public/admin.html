@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Echo — Admin</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-glow bg-glow--a"></div>
+  <div class="bg-glow bg-glow--b"></div>
+</div>
+
+<!-- ============ LOGIN GATE ============ -->
+<section class="admin-login" id="adminLogin">
+  <form class="admin-login-card glow-border" id="loginForm" novalidate>
+    <span class="nav__logo" style="justify-content:center;margin-bottom:6px;">
+      <span class="nav__logo-mark" aria-hidden="true">
+        <span class="mbar" style="--i:1"></span><span class="mbar" style="--i:2"></span>
+        <span class="mbar" style="--i:3"></span><span class="mbar" style="--i:4"></span>
+      </span>
+      Echo
+    </span>
+    <p class="admin-login-sub">Admin panel</p>
+
+    <div class="field">
+      <label for="adminPassword">Password</label>
+      <input type="password" id="adminPassword" name="password" autocomplete="current-password" required>
+    </div>
+
+    <p class="admin-error hidden" id="loginError"></p>
+
+    <button type="submit" class="btn btn--primary" id="loginBtn" style="width:100%;justify-content:center;">
+      Unlock dashboard
+    </button>
+  </form>
+</section>
+
+<!-- ============ DASHBOARD ============ -->
+<div class="admin-dash hidden" id="adminDash">
+  <header class="admin-header">
+    <span class="nav__logo">
+      <span class="nav__logo-mark" aria-hidden="true">
+        <span class="mbar" style="--i:1"></span><span class="mbar" style="--i:2"></span>
+        <span class="mbar" style="--i:3"></span><span class="mbar" style="--i:4"></span>
+      </span>
+      Echo <span class="admin-badge">Admin</span>
+    </span>
+    <div class="admin-header__actions">
+      <a href="/" class="btn btn--ghost" target="_blank" rel="noopener">View site ↗</a>
+      <button type="button" class="btn btn--ghost" id="logoutBtn">Log out</button>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <section class="admin-stats" id="adminStats" aria-label="Stats overview"></section>
+
+    <section class="admin-list-section">
+      <div class="admin-list-toolbar">
+        <h2>All feedback</h2>
+        <div class="search-box">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M13 13L10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          <input type="search" id="adminSearch" placeholder="Search name or text…">
+        </div>
+      </div>
+
+      <div class="admin-list" id="adminList"></div>
+      <p class="admin-empty hidden" id="adminEmpty">No feedback yet.</p>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="admin.js"></script>
+</body>
+</html>

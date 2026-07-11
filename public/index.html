@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Echo — A Wall of Real Voices</title>
+<meta name="description" content="A public feedback wall. Share your voice, reply, react.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500;1,9..144,600&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- custom cursor (desktop / fine-pointer only, enabled via JS) -->
+<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+
+<!-- ambient background: drifting aurora blobs + grain -->
+<div class="bg-layer" aria-hidden="true">
+  <div class="bg-glow bg-glow--a"></div>
+  <div class="bg-glow bg-glow--b"></div>
+  <div class="bg-glow bg-glow--c"></div>
+  <div class="bg-grain"></div>
+</div>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="siteNav">
+  <div class="nav__inner">
+    <a class="nav__logo" href="#top" aria-label="Echo home">
+      <span class="nav__logo-mark" aria-hidden="true">
+        <span class="mbar" style="--i:1"></span>
+        <span class="mbar" style="--i:2"></span>
+        <span class="mbar" style="--i:3"></span>
+        <span class="mbar" style="--i:4"></span>
+      </span>
+      Echo
+    </a>
+
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#pulse">Pulse</a>
+      <a href="#spotlight">Spotlight</a>
+      <a href="#wall">Wall</a>
+      <a href="#share">Guidelines</a>
+    </nav>
+
+    <div class="nav__right">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Switch to light mode">
+        <svg class="icon-sun" width="17" height="17" viewBox="0 0 17 17" fill="none"><circle cx="8.5" cy="8.5" r="3.4" stroke="currentColor" stroke-width="1.4"/><path d="M8.5 1v2M8.5 14v2M16 8.5h-2M3 8.5H1M13.6 3.4l-1.4 1.4M4.8 12.2l-1.4 1.4M13.6 13.6l-1.4-1.4M4.8 4.8L3.4 3.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <svg class="icon-moon" width="17" height="17" viewBox="0 0 17 17" fill="none"><path d="M14.5 10.4A6 6 0 0 1 6.6 2.5a6.4 6.4 0 1 0 7.9 7.9z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </button>
+      <a href="#share" class="btn btn--ghost nav__cta" data-magnetic>
+        Share your voice
+      </a>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <canvas id="particleField" class="hero__canvas" aria-hidden="true"></canvas>
+
+    <p class="eyebrow" data-reveal>Public feedback wall</p>
+    <h1 class="hero__title" id="heroTitle" data-reveal-words>
+      Every voice becomes a <em>wave.</em>
+    </h1>
+    <p class="hero__sub" data-reveal>
+      Real people, real ratings, real replies — stacked in the open.
+      No gatekeeping, no filters, just the wall as it comes in.
+    </p>
+
+    <div class="hero__cta-row" data-reveal>
+      <a href="#share" class="btn btn--primary btn--lg" data-magnetic>
+        Post your feedback
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#wall" class="btn btn--ghost btn--lg" data-magnetic>Browse the wall</a>
+    </div>
+
+    <div class="waveform" aria-hidden="true"></div>
+
+    <dl class="stats">
+      <div class="stats__item">
+        <dt>Voices captured</dt>
+        <dd data-count-to="2438">0</dd>
+      </div>
+      <div class="stats__item">
+        <dt>Average signal</dt>
+        <dd><span data-count-to="4.8" data-decimal="1">0</span><span class="stats__unit">/5</span></dd>
+      </div>
+      <div class="stats__item">
+        <dt>Replies today</dt>
+        <dd data-count-to="312">0</dd>
+      </div>
+    </dl>
+  </section>
+
+  <!-- ============ PULSE TICKER ============ -->
+  <section class="pulse" id="pulse" aria-label="Recent activity">
+    <div class="pulse__label">
+      <span class="pulse__dot" aria-hidden="true"></span> Live on the wall
+    </div>
+    <div class="marquee">
+      <div class="marquee__track" id="marqueeTrack"><!-- chips injected by script.js, duplicated for seamless loop --></div>
+    </div>
+  </section>
+
+  <!-- ============ SPOTLIGHT ============ -->
+  <section class="spotlight-section" id="spotlight">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">Spotlight</p>
+      <h2>A few voices worth pausing on</h2>
+    </div>
+
+    <div class="spotlight-card glow-border" id="spotlightCard" data-reveal>
+      <svg class="spotlight-quotemark" width="54" height="42" viewBox="0 0 54 42" fill="none" aria-hidden="true">
+        <path d="M0 42V25.2C0 10.5 8.6 1.7 22 0l2.5 6.3C15.9 8.8 11.7 14 11.7 22h10.6V42H0Zm29.5 0V25.2c0-14.7 8.6-23.5 22-25.2L54 6.3C45.4 8.8 41.2 14 41.2 22h10.6V42H29.5Z" fill="currentColor"/>
+      </svg>
+
+      <div class="spotlight-track" id="spotlightTrack"><!-- slides injected by script.js --></div>
+
+      <div class="spotlight-controls">
+        <button type="button" class="spotlight-arrow" id="spotlightPrev" aria-label="Previous voice" data-magnetic>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3 5 8l5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="spotlight-dots" id="spotlightDots"></div>
+        <button type="button" class="spotlight-arrow" id="spotlightNext" aria-label="Next voice" data-magnetic>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMPOSER ============ -->
+  <section class="composer-section" id="share">
+    <div class="composer-card glow-border" data-reveal>
+      <div class="composer-card__head">
+        <h2>Add your voice</h2>
+        <p>It lands on the wall instantly, exactly as you write it.</p>
+      </div>
+
+      <form id="composerForm" class="composer-form" novalidate>
+        <div class="field-row">
+          <div class="field">
+            <label for="fName">Name</label>
+            <input type="text" id="fName" name="name" placeholder="Aditi Sharma" maxlength="40" autocomplete="off" required>
+          </div>
+          <div class="field">
+            <label for="fEmail">Email <span class="field__hint">— shown only as a private badge</span></label>
+            <input type="email" id="fEmail" name="email" placeholder="aditi@example.com" maxlength="60" autocomplete="off" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Your rating</label>
+          <div class="rating-picker" id="ratingPicker" role="radiogroup" aria-label="Rating out of 5">
+            <button type="button" class="rating-picker__bar" data-value="1" role="radio" aria-checked="false" aria-label="1 out of 5"></button>
+            <button type="button" class="rating-picker__bar" data-value="2" role="radio" aria-checked="false" aria-label="2 out of 5"></button>
+            <button type="button" class="rating-picker__bar" data-value="3" role="radio" aria-checked="false" aria-label="3 out of 5"></button>
+            <button type="button" class="rating-picker__bar" data-value="4" role="radio" aria-checked="false" aria-label="4 out of 5"></button>
+            <button type="button" class="rating-picker__bar" data-value="5" role="radio" aria-checked="false" aria-label="5 out of 5"></button>
+            <span class="rating-picker__value" id="ratingValue">Tap a bar</span>
+          </div>
+          <input type="hidden" name="rating" id="fRating" value="0">
+        </div>
+
+        <div class="field">
+          <label for="fMessage">Feedback</label>
+          <textarea id="fMessage" name="message" rows="4" maxlength="300" placeholder="What stood out — good, bad, or somewhere in between?" required></textarea>
+          <div class="char-count"><span id="charCount">0</span>/300</div>
+        </div>
+
+        <div class="composer-form__footer">
+          <div class="avatar-preview" id="avatarPreview" aria-hidden="true">?</div>
+          <button type="submit" class="btn btn--primary" id="submitBtn" data-magnetic>
+            Post to the wall
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </form>
+
+      <ul class="guidelines">
+        <li><span>Be specific.</span> Name what actually happened.</li>
+        <li><span>Be kind.</span> Sharp is fine, cruel isn't.</li>
+        <li><span>One story.</span> Keep each post to a single thought.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ FEED ============ -->
+  <section class="feed-section" id="wall">
+    <div class="section-head" data-reveal>
+      <p class="eyebrow">The wall</p>
+      <h2>Everything, unfiltered</h2>
+    </div>
+
+    <div class="feed-toolbar" data-reveal>
+      <div class="sort-pills" id="sortPills" role="tablist" aria-label="Sort feedback">
+        <button class="pill is-active" data-sort="newest" role="tab" aria-selected="true">Newest</button>
+        <button class="pill" data-sort="top" role="tab" aria-selected="false">Top rated</button>
+        <button class="pill" data-sort="liked" role="tab" aria-selected="false">Most liked</button>
+      </div>
+
+      <div class="search-box">
+        <svg width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M13 13L10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        <input type="search" id="searchInput" placeholder="Search the wall…" aria-label="Search feedback">
+      </div>
+    </div>
+
+    <div class="feed-list" id="feedList" aria-live="polite"></div>
+
+    <p class="feed-empty hidden" id="feedEmpty">
+      Nothing matches that search. <button type="button" id="clearSearch" class="link-btn">Clear it</button> and see the whole wall.
+    </p>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <span class="nav__logo nav__logo--small">
+      <span class="nav__logo-mark" aria-hidden="true">
+        <span class="mbar" style="--i:1"></span>
+        <span class="mbar" style="--i:2"></span>
+        <span class="mbar" style="--i:3"></span>
+        <span class="mbar" style="--i:4"></span>
+      </span>
+      Echo
+    </span>
+    <p>Built for voices that deserve to be heard as-is.</p>
+    <span class="site-footer__year">© <span id="year"></span></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
