@@ -29,6 +29,7 @@
 
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isFinePointer = window.matchMedia("(pointer: fine)").matches;
+  const isMobile = window.matchMedia("(max-width: 640px)").matches;
 
   /* =========================================================
      1. STATE & HELPERS
@@ -774,6 +775,7 @@
   }
 
   function attachTilt() {
+    if (isMobile) return;
     document.querySelectorAll(".fcard").forEach((card) => {
       card.addEventListener("mousemove", (e) => {
         const r = card.getBoundingClientRect();
@@ -888,7 +890,7 @@
   }
 
   function initBgOrbs() {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isMobile) return;
     const layer = document.querySelector(".bg-layer");
     if (!layer) return;
     const colors = ["--signal", "--wave", "--pulse", "--violet"];
@@ -915,7 +917,7 @@
     '<rect x="2" y="9" width="3" height="6" fill="currentColor"/><rect x="8" y="4" width="3" height="16" fill="currentColor"/><rect x="14" y="7" width="3" height="10" fill="currentColor"/><rect x="20" y="2" width="3" height="20" fill="currentColor"/>',
   ];
   function initBgIcons() {
-    if (prefersReducedMotion) return;
+    if (prefersReducedMotion || isMobile) return;
     const layer = document.querySelector(".bg-layer");
     if (!layer) return;
     for (let i = 0; i < 6; i++) {
@@ -937,6 +939,7 @@
   }
 
   function initSideSignals() {
+    if (window.matchMedia("(max-width: 1180px)").matches) return;
     const layer = document.querySelector(".bg-layer");
     if (!layer) return;
     ["left", "right"].forEach((side) => {
@@ -967,7 +970,7 @@
 
   function initParticles() {
     const canvas = document.getElementById("particleField");
-    if (!canvas || prefersReducedMotion) return;
+    if (!canvas || prefersReducedMotion || isMobile) return;
     const ctx = canvas.getContext("2d");
     let particles = [];
     let w, h;
