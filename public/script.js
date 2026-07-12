@@ -821,30 +821,73 @@
 
   function splitHeroWords() {
     const el = document.getElementById("heroTitle");
+    if (!el) return;
+
     const wrapper = document.createElement("div");
     wrapper.innerHTML = el.innerHTML;
     let wordIndex = 0;
-    function wrapWords(node) {
+
+    // Track karne ke liye ki current text <em> tag ke andar hai ya nahi
+    function wrapWords(node, isEm = false) {
       [...node.childNodes].forEach((child) => {
         if (child.nodeType === Node.TEXT_NODE) {
           const frag = document.createDocumentFragment();
           child.textContent.split(/(\s+)/).forEach((piece) => {
-            if (piece.trim() === "") { frag.appendChild(document.createTextNode(piece)); return; }
+            if (piece.trim() === "") {
+              frag.appendChild(document.createTextNode(piece));
+              return;
+            }
             const span = document.createElement("span");
             span.className = "word";
             span.style.setProperty("--w", wordIndex++);
+            span.style.display = "inline-block";
+            span.style.willChange = "opacity, transform";
+
+            // Agar word <em> tag ke andar hai, to gradient direct SPAN par lagao
+            if (isEm) {
+              span.style.fontStyle = "italic";
+              span.style.background = "linear-gradient(100deg, var(--signal), var(--pulse) 65%)";
+              span.style.webkitBackgroundClip = "text";
+              span.style.backgroundClip = "text";
+              span.style.webkitTextFillColor = "transparent";
+              span.style.color = "transparent";
+              span.style.webkitTransform = "translateZ(0)"; // Hardware acceleration for mobile
+            }
+
             span.textContent = piece;
             frag.appendChild(span);
           });
           node.replaceChild(frag, child);
         } else if (child.nodeType === Node.ELEMENT_NODE) {
-          wrapWords(child);
+          const checkEm = isEm || child.tagName.toLowerCase() === "em";
+          if (checkEm) {
+            child.style.fontStyle = "italic";
+            child.style.display = "inline-block";
+            // Parent em tag ka color remove kar rahe hain taki clash na ho
+            child.style.background = "none";
+            child.style.color = "inherit";
+          }
+          wrapWords(child, checkEm);
         }
       });
     }
+
     wrapWords(wrapper);
     el.innerHTML = wrapper.innerHTML;
-    requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add("in-view")));
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.classList.add("in-view");
+
+        // Mobile safety timer: 1 second baad force opacity 1
+        setTimeout(() => {
+          el.querySelectorAll(".word").forEach((w) => {
+            w.style.opacity = "1";
+            w.style.visibility = "visible";
+          });
+        }, 1000);
+      });
+    });
   }
 
   function initCountUp() {

@@ -553,6 +553,30 @@ footer {
   transform: translateY(0) rotate(0);
 }
 
+/* Parent EM tag normal container rahega */
+#heroTitle em,
+.hero h1 em {
+  font-style: italic !important;
+  display: inline-block !important;
+  visibility: visible !important;
+  background: none !important;
+  color: inherit !important;
+}
+
+/* Gradient strictly EM ke andar wale spans par load hoga */
+#heroTitle em .word,
+.hero h1 em .word {
+  background: linear-gradient(100deg, var(--signal), var(--pulse) 65%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  font-style: italic !important;
+  display: inline-block !important;
+  -webkit-transform: translateZ(0);
+  /* Prevents mobile disappearing bug */
+}
+
 /* ===========================================================
    NAV
 =========================================================== */
@@ -2163,6 +2187,14 @@ html[data-theme="light"] .icon-moon {
 
   .hero {
     padding-top: 56px;
+  }
+
+  .hero__sub{
+    font-size: 0.9rem;
+  }
+
+.waveform {
+    height: 0px;
   }
 
   .field-row {

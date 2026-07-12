@@ -1,6 +1,7 @@
 require("dotenv").config();
 
 const path = require("path");
+const os = require("os");
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
@@ -71,9 +72,30 @@ async function start() {
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
-    console.log(`Echo is running → http://localhost:${PORT}`);
-    console.log(`Admin panel      → http://localhost:${PORT}/admin`);
+  app.listen(PORT, "0.0.0.0", () => {
+    // Automatically computer ka Local Network IP Address dhundta hai
+    const interfaces = os.networkInterfaces();
+    let networkIp = "Not found (Check Wi-Fi/LAN)";
+
+    for (const name of Object.keys(interfaces)) {
+      for (const net of interfaces[name]) {
+        // Only IPv4 aur non-internal (jo 127.0.0.1 na ho) IP select karenge
+        if (net.family === "IPv4" && !net.internal) {
+          networkIp = net.address;
+          break;
+        }
+      }
+      if (networkIp !== "Not found (Check Wi-Fi/LAN)") break;
+    }
+
+    console.log(`\n========================================================`);
+    console.log(`🚀 ECHO SERVER IS RUNNING PERFECTLY`);
+    console.log(`========================================================`);
+    console.log(`💻 Local Access    → http://localhost:${PORT}`);
+    console.log(`🛡️  Admin Panel     → http://localhost:${PORT}/admin`);
+    console.log(`📱 Network Access  → http://${networkIp}:${PORT}`);
+    console.log(`========================================================\n`);
+
     if (!process.env.ADMIN_PASSWORD_HASH) {
       console.warn("⚠  ADMIN_PASSWORD_HASH is not set in .env — the admin panel login will not work yet.");
     }
