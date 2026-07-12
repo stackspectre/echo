@@ -76,6 +76,8 @@ html[data-theme="light"] {
 html {
   scroll-behavior: smooth;
   -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
@@ -394,8 +396,7 @@ footer {
 .feed-section,
 .spotlight-section,
 .nav__inner,
-.site-footer__inner,
-.pulse {
+.site-footer__inner {
   max-width: 780px;
   margin: 0 auto;
   padding-left: 28px;
@@ -877,12 +878,15 @@ html[data-theme="light"] .icon-moon {
   align-items: center;
   gap: 8px;
   justify-content: center;
+  max-width: 780px;
+  margin: 0 auto 16px;
+  padding-left: 28px;
+  padding-right: 28px;
   font-family: var(--font-mono);
   font-size: .72rem;
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--paper-faint);
-  margin-bottom: 16px;
 }
 
 .pulse__dot {
@@ -909,8 +913,7 @@ html[data-theme="light"] .icon-moon {
 }
 
 .marquee {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: 100%;
   overflow: hidden;
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
@@ -1497,6 +1500,7 @@ html[data-theme="light"] .icon-moon {
 .feed-section {
   position: relative;
   padding-bottom: 100px;
+  overflow: hidden;
 }
 
 .feed-section::before {
@@ -1505,7 +1509,8 @@ html[data-theme="light"] .icon-moon {
   top: -40px;
   left: 50%;
   transform: translateX(-50%);
-  width: 600px;
+  width: 90%;
+  max-width: 600px;
   height: 280px;
   pointer-events: none;
   z-index: -1;
@@ -1998,16 +2003,16 @@ html[data-theme="light"] .icon-moon {
   font-size: .85rem;
 }
 
-.txt{
+.txt {
   color: var(--paper-dim);
   font-size: .82rem;
-  font-family:var(--font-body)
+  font-family: var(--font-body)
 }
 
-.footer-logo{
+.footer-logo {
   height: 50px;
   width: auto;
-  margin-left:-10px;
+  margin-left: -10px;
 }
 
 .site-footer__year {
