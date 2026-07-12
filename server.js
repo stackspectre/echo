@@ -1,12 +1,12 @@
 require("dotenv").config();
 
+const MongoStore = require("connect-mongo").default;
 const path = require("path");
 const os = require("os");
 const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const session = require("express-session");
-const MongoStore = require("connect-mongo");
 
 const { connectDb } = require("./db");
 const { sseHandler } = require("./sse");
@@ -34,10 +34,9 @@ app.use(
     secret: process.env.SESSION_SECRET || "please-change-this-secret-in-.env",
     resave: false,
     saveUninitialized: false,
-    // 2. Yahan MemoryStore ki jagah MongoDB store lagao
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/echo_feedback",
-      collectionName: "sessions", // Database me sessions naam ka folder ban jayega
+      mongoUrl: process.env.MONGODB_URI || "mongodb://stackspectre_db_user:ZEbVDqKdjT41MJwf@ac-igoeoxb-shard-00-00.loomhx3.mongodb.net:27017,ac-igoeoxb-shard-00-01.loomhx3.mongodb.net:27017,ac-igoeoxb-shard-00-02.loomhx3.mongodb.net:27017/?ssl=true&replicaSet=atlas-b3ykjc-shard-0&authSource=admin&appName=Echo",
+      collectionName: "sessions",
       ttl: 60 * 60 * 8, // 8 hours (session expiry)
     }),
     cookie: {
