@@ -2193,14 +2193,6 @@ html[data-theme="light"] .icon-moon {
     display: none;
   }
 
-  body.cursor-ready {
-    cursor: auto;
-  }
-
-  .cursor-dot,
-  .cursor-ring {
-    display: none;
-  }
 
   /* stop the CPU/GPU-heavy stuff: fewer moving layers = smoother scrolling */
   .bg-glow {
@@ -2330,7 +2322,8 @@ html[data-theme="light"] .icon-moon {
   .fcard,
   [data-reveal],
   [data-reveal-words],
-  .hero__title .word {
+  .hero__title .word, 
+  .hero__title .word em {
     transition: none !important;
     opacity: 1 !important;
     transform: none !important;
