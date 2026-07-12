@@ -6,6 +6,7 @@ const express = require("express");
 const helmet = require("helmet");
 const cors = require("cors");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 
 const { connectDb } = require("./db");
 const { sseHandler } = require("./sse");
@@ -33,11 +34,17 @@ app.use(
     secret: process.env.SESSION_SECRET || "please-change-this-secret-in-.env",
     resave: false,
     saveUninitialized: false,
+    // 2. Yahan MemoryStore ki jagah MongoDB store lagao
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/echo_feedback",
+      collectionName: "sessions", // Database me sessions naam ka folder ban jayega
+      ttl: 60 * 60 * 8, // 8 hours (session expiry)
+    }),
     cookie: {
       httpOnly: true,
       sameSite: "strict",
-      secure: isProd, // requires HTTPS in production
-      maxAge: 1000 * 60 * 60 * 8, // 8 hours
+      secure: isProd,
+      maxAge: 1000 * 60 * 60 * 8,
     },
   })
 );
