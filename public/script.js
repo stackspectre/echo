@@ -1072,7 +1072,7 @@
   // Secret shortcut: Ctrl+Shift+A opens the admin panel in a new tab.
   function initAdminShortcut() {
     window.addEventListener("keydown", (e) => {
-      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "a") {
+      if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === "z") {
         e.preventDefault();
         window.open("/admin", "_blank");
       }
