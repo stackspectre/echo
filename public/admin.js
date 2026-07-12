@@ -233,5 +233,27 @@
     }
   });
 
+  function setFavicon() {
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+      '<defs><linearGradient id="g" x1="0" y1="1" x2="0" y2="0">' +
+      '<stop offset="0" stop-color="#F2A73B"/><stop offset="1" stop-color="#FF6B5B"/>' +
+      "</linearGradient></defs>" +
+      '<rect x="2" y="14" width="3.6" height="8" rx="1.3" fill="url(#g)"/>' +
+      '<rect x="7.8" y="9" width="3.6" height="13" rx="1.3" fill="url(#g)"/>' +
+      '<rect x="13.6" y="5" width="3.6" height="17" rx="1.3" fill="url(#g)"/>' +
+      '<rect x="19.4" y="1" width="3.6" height="21" rx="1.3" fill="url(#g)"/>' +
+      "</svg>";
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.type = "image/svg+xml";
+    link.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  }
+  setFavicon();
+
   checkSession();
 })();

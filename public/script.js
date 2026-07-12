@@ -1037,9 +1037,102 @@
   }
 
   /* =========================================================
+     7b. FAVICON — same bar-mark logo as the nav, set on every page
+  ========================================================= */
+  function setFavicon() {
+    const svg =
+      '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">' +
+      '<defs><linearGradient id="g" x1="0" y1="1" x2="0" y2="0">' +
+      '<stop offset="0" stop-color="#F2A73B"/><stop offset="1" stop-color="#FF6B5B"/>' +
+      "</linearGradient></defs>" +
+      '<rect x="2" y="14" width="3.6" height="8" rx="1.3" fill="url(#g)"/>' +
+      '<rect x="7.8" y="9" width="3.6" height="13" rx="1.3" fill="url(#g)"/>' +
+      '<rect x="13.6" y="5" width="3.6" height="17" rx="1.3" fill="url(#g)"/>' +
+      '<rect x="19.4" y="1" width="3.6" height="21" rx="1.3" fill="url(#g)"/>' +
+      "</svg>";
+    let link = document.querySelector("link[rel='icon']");
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "icon";
+      document.head.appendChild(link);
+    }
+    link.type = "image/svg+xml";
+    link.href = "data:image/svg+xml," + encodeURIComponent(svg);
+  }
+
+  /* =========================================================
+       7c. OPENING LOADER (Integrated 2026 Sequence)
+    ========================================================= */
+  function runOpeningLoader() {
+    return new Promise((resolve) => {
+      const loader = document.getElementById("siteLoader");
+      const loaderText = document.getElementById("loader-text");
+
+      if (!loader || !loaderText) {
+        document.documentElement.classList.add("site-visible");
+        resolve();
+        return;
+      }
+
+      const buildSteps = [
+        "INITIALIZING CORE...",
+        "ASSEMBLING MODULES...",
+        "RENDERING WALL...",
+        "SYSTEM READY."
+      ];
+
+      let currentStep = 0;
+      const textInterval = setInterval(() => {
+        currentStep++;
+        if (currentStep < buildSteps.length) {
+          loaderText.textContent = buildSteps[currentStep];
+        } else {
+          clearInterval(textInterval);
+        }
+      }, 450);
+
+      // Total buildup time: ~2 seconds
+      setTimeout(() => {
+        clearInterval(textInterval);
+        loaderText.textContent = "WELCOME.";
+
+        // Exact 600ms hold so user can easily read "WELCOME."
+        setTimeout(() => {
+          loader.classList.add("is-loaded");
+
+          // Slight 150ms delay to smoothly float the website up into view
+          setTimeout(() => {
+            document.documentElement.classList.add("site-visible");
+          }, 150);
+
+          // Clean up DOM memory after fade-out completes
+          setTimeout(() => {
+            loader.remove();
+            resolve();
+          }, 1100);
+
+        }, 600); // 600ms pause on "WELCOME."
+
+      }, 2000);
+    });
+  }
+  /* =========================================================
      8. INIT
   ========================================================= */
   async function boot() {
+    setFavicon();
+
+    // Safety timer: Never let a slow request freeze the screen indefinitely
+    const loaderSafety = setTimeout(() => {
+      const loader = document.getElementById("siteLoader");
+      if (loader) {
+        loader.classList.add("is-loaded");
+        document.documentElement.classList.add("site-visible");
+        setTimeout(() => loader.remove(), 800);
+      }
+    }, 6500);
+
+    // Render static components
     document.getElementById("year").textContent = new Date().getFullYear();
     renderWaveform();
     initParticles();
@@ -1054,12 +1147,17 @@
     setupSpotlightChrome();
     initAdminShortcut();
 
+    // Async data fetching (runs in the background while loader animates)
     await loadPublicStats();
     initCountUp();
+    await loadFeedback();
+    initRealtime();
 
-    await loadFeedback();  // real data, replaces all dummy content
-    initRealtime();         // live push for every future update
+    // Execute the smooth loader sequence and wait for it to finish gracefully
+    await runOpeningLoader();
+    clearTimeout(loaderSafety);
   }
 
   boot();
+
 })();

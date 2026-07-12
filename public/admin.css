@@ -19,6 +19,9 @@
   text-align:center; margin:0 0 6px; color: var(--paper-faint);
   font-family: var(--font-mono); font-size:.78rem; letter-spacing:.08em; text-transform:uppercase;
 }
+
+#adminPassword{ width:100%; padding:10px 12px; border-radius: var(--radius-sm); border:1px solid var(--ink-line); background: var(--glass-surface); color: var(--paper); font-size:.92rem; }
+
 .admin-error{
   margin:0; padding:10px 12px; border-radius: var(--radius-sm);
   background: rgba(255,107,91,.12); border:1px solid rgba(255,107,91,.35);

@@ -14,9 +14,21 @@
 </head>
 <body>
 
-<!-- custom cursor (desktop / fine-pointer only, enabled via JS) -->
-<div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
-<div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+<!-- ================= Dynamic 2026 Loader ================= -->
+<div id="siteLoader" class="loader">
+  <div class="loader__content">
+    <div class="loader__bars">
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+      <span class="bar"></span>
+    </div>
+    <div class="loader__status">
+      <span id="loader-text">INITIALIZING CORE...</span>
+    </div>
+  </div>
+</div>
 
 <!-- ambient background: drifting aurora blobs + grain -->
 <div class="bg-layer" aria-hidden="true">
@@ -102,7 +114,7 @@
   <!-- ============ PULSE TICKER ============ -->
   <section class="pulse" id="pulse" aria-label="Recent activity">
     <div class="pulse__label">
-      <span class="pulse__dot" aria-hidden="true"></span> Live on the wall
+   Live on the wall
     </div>
     <div class="marquee">
       <div class="marquee__track" id="marqueeTrack"><!-- chips injected by script.js, duplicated for seamless loop --></div>
@@ -231,7 +243,7 @@
       </span>
       Echo
       <span class="txt">by</span>
-      <img src="developers_logo_longform.png" alt="Developers in the House" class="footer-logo">
+      <img src="developers_logo_longform.png" alt="Developers Logo" class="footer-logo">
     </span>
     <p>Built for voices that deserve to be heard as-is.</p>
     <span class="site-footer__year">© <span id="year"></span></span>
@@ -241,5 +253,48 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="script.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const loader = document.getElementById("loader");
+    const loaderText = document.getElementById("loader-text");
+
+    if (!loader || !loaderText) return;
+
+    // Text buildup sequence
+    const buildSteps = [
+      "INITIALIZING CORE...",
+      "ASSEMBLING MODULES...",
+      "RENDERING WALL...",
+      "SYSTEM READY."
+    ];
+
+    let currentStep = 0;
+
+    // Cycle text every 450ms
+    const textInterval = setInterval(() => {
+      currentStep++;
+      if (currentStep < buildSteps.length) {
+        loaderText.textContent = buildSteps[currentStep];
+      } else {
+        clearInterval(textInterval);
+      }
+    }, 450);
+
+    // Trigger smooth site reveal after 2.2 seconds
+    setTimeout(() => {
+      clearInterval(textInterval);
+      loaderText.textContent = "WELCOME.";
+
+      // Add exit animation class
+      loader.classList.add("is-loaded");
+      document.documentElement.classList.add("site-visible");
+      // Remove element from DOM after transition finishes to free memory
+      setTimeout(() => {
+        loader.remove();
+      }, 800);
+
+    }, 2200);
+  });
+</script>
 </body>
 </html>
