@@ -127,6 +127,7 @@ textarea,
   outline-offset: 3px;
   border-radius: 4px;
 }
+
 /* ===========================================================
    Smooth 2026 Loader System (No Green, No Jerk)
 =========================================================== */
@@ -268,6 +269,7 @@ body>main,
   transform: translateY(0) scale(1);
   filter: blur(0px);
 }
+
 /* ===========================================================
    Ambient background — drifting aurora blobs + grain
 =========================================================== */
@@ -2189,11 +2191,11 @@ html[data-theme="light"] .icon-moon {
     padding-top: 56px;
   }
 
-  .hero__sub{
+  .hero__sub {
     font-size: 0.9rem;
   }
 
-.waveform {
+  .waveform {
     height: 0px;
   }
 
@@ -2298,6 +2300,7 @@ html[data-theme="light"] .icon-moon {
   .hero__cta-row {
     flex-direction: column;
     align-items: stretch;
+    margin-top: 60px;
   }
 
   .hero__cta-row .btn {
@@ -2345,16 +2348,14 @@ html[data-theme="light"] .icon-moon {
   .pulse__dot,
   .glow-border::before,
   .spotlight-eq span,
-  .spotlight-progress__fill,
-  .loader__bar,
-  .loader__word {
+  .spotlight-progress__fill {
     animation: none !important;
   }
 
   .fcard,
   [data-reveal],
   [data-reveal-words],
-  .hero__title .word, 
+  .hero__title .word,
   .hero__title .word em {
     transition: none !important;
     opacity: 1 !important;

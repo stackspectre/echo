@@ -747,19 +747,23 @@
     document.body.classList.add("cursor-ready");
     const dot = document.getElementById("cursorDot");
     const ring = document.getElementById("cursorRing");
-    let mx = window.innerWidth / 2, my = window.innerHeight / 2;
-    let rx = mx, ry = my;
-    window.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; });
-    function loop() {
-      rx += (mx - rx) * 0.18;
-      ry += (my - ry) * 0.18;
-      dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
-      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
-      requestAnimationFrame(loop);
+    if (!dot || !ring) {
+      document.body.classList.remove("cursor-ready");
+    } else {
+      let mx = window.innerWidth / 2, my = window.innerHeight / 2;
+      let rx = mx, ry = my;
+      window.addEventListener("mousemove", (e) => { mx = e.clientX; my = e.clientY; });
+      function loop() {
+        rx += (mx - rx) * 0.18;
+        ry += (my - ry) * 0.18;
+        dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+        ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+        requestAnimationFrame(loop);
+      }
+      loop();
+      document.addEventListener("mouseover", (e) => { if (e.target.closest("a, button, input, textarea, .fcard")) ring.classList.add("is-hovering"); });
+      document.addEventListener("mouseout", (e) => { if (e.target.closest("a, button, input, textarea, .fcard")) ring.classList.remove("is-hovering"); });
     }
-    loop();
-    document.addEventListener("mouseover", (e) => { if (e.target.closest("a, button, input, textarea, .fcard")) ring.classList.add("is-hovering"); });
-    document.addEventListener("mouseout", (e) => { if (e.target.closest("a, button, input, textarea, .fcard")) ring.classList.remove("is-hovering"); });
   }
 
   if (isFinePointer && !prefersReducedMotion) {
@@ -1170,35 +1174,44 @@
       const loader = document.getElementById("siteLoader");
       if (loader) {
         loader.classList.add("is-loaded");
-        document.documentElement.classList.add("site-visible");
         setTimeout(() => loader.remove(), 800);
       }
+      document.documentElement.classList.add("site-visible");
     }, 6500);
 
-    // Render static components
-    document.getElementById("year").textContent = new Date().getFullYear();
-    renderWaveform();
-    initParticles();
-    splitHeroWords();
-    initRipples();
-    initBgOrbs();
-    initBgIcons();
-    initSideSignals();
-    initBgParallax();
-    attachGlassGlow(".composer-card");
-    attachGlassGlow(".spotlight-card");
-    setupSpotlightChrome();
-    initAdminShortcut();
+    try {
+      // Render static components
+      document.getElementById("year").textContent = new Date().getFullYear();
+      renderWaveform();
+      initParticles();
+      splitHeroWords();
+      initRipples();
+      initBgOrbs();
+      initBgIcons();
+      initSideSignals();
+      initBgParallax();
+      attachGlassGlow(".composer-card");
+      attachGlassGlow(".spotlight-card");
+      setupSpotlightChrome();
+      initAdminShortcut();
 
-    // Async data fetching (runs in the background while loader animates)
-    await loadPublicStats();
-    initCountUp();
-    await loadFeedback();
-    initRealtime();
+      // Async data fetching (runs in the background while loader animates)
+      await loadPublicStats();
+      initCountUp();
+      await loadFeedback();
+      initRealtime();
 
-    // Execute the smooth loader sequence and wait for it to finish gracefully
-    await runOpeningLoader();
-    clearTimeout(loaderSafety);
+      // Execute the smooth loader sequence and wait for it to finish gracefully
+      await runOpeningLoader();
+    } catch (err) {
+      // Whatever broke, the site must not stay permanently blank behind the loader
+      console.error("[boot] something failed during startup:", err);
+      const loader = document.getElementById("siteLoader");
+      if (loader) loader.remove();
+      document.documentElement.classList.add("site-visible");
+    } finally {
+      clearTimeout(loaderSafety);
+    }
   }
 
   boot();
