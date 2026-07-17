@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://echo-1ab2.onrender.com/sitemap.xml
