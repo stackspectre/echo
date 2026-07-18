@@ -1,22 +1,3 @@
-/**
- * email.js — sends the admin a full-detail email for every new feedback.
- *
- * Uses Resend's HTTP API (not SMTP). This matters specifically because
- * Render — and most free/starter hosting tiers — block outbound SMTP ports
- * (25/465/587) to prevent spam abuse. SMTP works fine on localhost but
- * silently times out once deployed there. An HTTP API call goes over normal
- * HTTPS (port 443), which is never blocked.
- *
- * No extra npm package needed — Node 18+'s built-in fetch is enough.
- *
- * Setup: sign up at https://resend.com (free tier, no card required),
- * create an API key, put it in .env as RESEND_API_KEY.
- *
- * If you haven't verified your own sending domain with Resend yet, use
- * their shared sandbox sender "onboarding@resend.dev" as EMAIL_FROM — it
- * works immediately with zero setup, good enough for this notification use case.
- */
-
 let warned = false;
 
 function escapeHtml(str) {

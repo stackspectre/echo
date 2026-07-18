@@ -105,7 +105,7 @@ async function start() {
     if (!process.env.ADMIN_PASSWORD_HASH) {
       console.warn("⚠  ADMIN_PASSWORD_HASH is not set in .env — the admin panel login will not work yet.");
     }
-    if (!process.env.SMTP_HOST || !process.env.ADMIN_EMAIL) {
+    if (!process.env.ADMIN_EMAIL) {
       console.warn("⚠  SMTP_HOST / ADMIN_EMAIL not set in .env — email notifications are disabled for now.");
     }
   });
