@@ -155,6 +155,7 @@ async function getStats() {
 }
 
 module.exports = {
+  Feedback,
   connectDb,
   listFeedback,
   createFeedback,
